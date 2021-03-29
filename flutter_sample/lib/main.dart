@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(new TodoApp());
+void main() => runApp(new SampleApp());
 
-class TodoApp extends StatelessWidget {
+class SampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Welcome User!',
-      home: new TodoList(),
+      home: new SampleList(),
       
     );
   }
 }
 
-class TodoList extends StatefulWidget {
+class SampleList extends StatefulWidget {
   @override
-  createState() => new TodoListState();
+  createState() => new SampleListState();
 }
 
-class TodoListState extends State<TodoList> {
+class SampleListState extends State<SampleList> {
   List<String> _todoItems = [];
 
   // This will be called each time the + button is pressed
@@ -30,24 +30,24 @@ class TodoListState extends State<TodoList> {
   }
 
   // Build the whole list of todo items
-  Widget _buildTodoList() {
+  Widget _buildList() {
     return new ListView.builder(
       itemBuilder: (context, index) {
         if(index < _todoItems.length) {
-          return _buildTodoItem(_todoItems[index], index);
+          return _buildWithItem(_todoItems[index], index);
         }
       }
     ); 
   }
 
-  Widget _buildTodoItem(String todoText, int index) {
+  Widget _buildWithItem(String todoText, int index) {
     return new ListTile(
       title: new Text(todoText),
-      onTap: () => _promptRemoveTodoItem(index)
+      onTap: () => _clickToRemove(index)
     );
   }
 
-  void _pushAddTodoScreen() {
+  void _addToList() {
   // Push this page onto the stack
     Navigator.of(context).push(
       // MaterialPageRoute will automatically animate the screen entry, as well
@@ -72,14 +72,15 @@ class TodoListState extends State<TodoList> {
             ),
             body: new TextField(
               autofocus: true,
-              onSubmitted: (val) {
-                _addTodoItem(val);
-                Navigator.pop(context); // Close the add todo screen
-              },
               decoration: new InputDecoration(
                 hintText: 'Enter something to do...',
                 contentPadding: const EdgeInsets.all(16.0)
               ),
+              onSubmitted: (val) {
+                _addTodoItem(val);
+                Navigator.pop(context); // Close the add todo screen
+              },
+              
             )
           );
         }
@@ -87,12 +88,12 @@ class TodoListState extends State<TodoList> {
     );
   }
 
-  void _removeTodoItem(int index) {
+  void _removeItem(int index) {
   setState(() => _todoItems.removeAt(index));
   }
 
   // Show an alert dialog asking the user to confirm that the task is done
-  void _promptRemoveTodoItem(int index) {
+  void _clickToRemove(int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -106,7 +107,7 @@ class TodoListState extends State<TodoList> {
             new TextButton(
               child: new Text('REMOVE'),
               onPressed: () {
-                _removeTodoItem(index);
+                _removeItem(index);
                 Navigator.of(context).pop();
               }
             )
@@ -134,11 +135,11 @@ class TodoListState extends State<TodoList> {
          ),        
      ),    
       ),
-      body: _buildTodoList(),
+      body: _buildList(),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _pushAddTodoScreen, // pressing this button now opens the new screen
-        tooltip: 'Create Task',
+        onPressed: _addToList, // pressing this button now opens the new screen
         child: new Icon(Icons.add), 
+        tooltip: 'Create Task',
       ),
     );
   }
